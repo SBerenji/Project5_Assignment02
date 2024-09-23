@@ -8,6 +8,8 @@
 using namespace std;
 
 
+// defining the PRE_RELEASE compiler directive
+#define PRE_RELEASE
 
 
 // defining the STUDENT_DATA struct
@@ -15,6 +17,11 @@ struct STUDENT_DATA
 {
 	string firstName;
 	string lastName;
+
+	// adding the email element only when PRE_RELEASE is enabled
+	#ifdef PRE_RELEASE
+	string email;
+	#endif
 };
 
 
@@ -47,6 +54,11 @@ vector<STUDENT_DATA> CreateStudentDataObjects(string fileName)
 			getline(lineAsStream, studentData.firstName, ',');
 
 
+			// if the PRE_RELEASE directive is enabled, then read and store the email of the student data
+			#ifdef PRE_RELEASE
+				getline(lineAsStream, studentData.email);
+			#endif
+
 			// adding the objects to the vector
 			studentVector.push_back(studentData);
 		}
@@ -68,8 +80,12 @@ void PrintStudentData(vector<STUDENT_DATA> studentVector)
 {
 	for (STUDENT_DATA element : studentVector)
 	{
-		cout << element.lastName << "," << element.firstName << endl;  // since the text file has the last name and then the first name of the students, we print out in the same format
+		#ifdef PRE_RELEASE
+			cout << element.lastName << "," << element.firstName << "," << element.email << endl;  // printing out the email information as well when the PRE_RELEASE directive is enabled
 
+		#else
+			cout << element.lastName << "," << element.firstName << endl;  // since the text file has the last name and then the first name of the students, we print out in the same format
+		#endif
 	}
 }
 
@@ -77,10 +93,33 @@ void PrintStudentData(vector<STUDENT_DATA> studentVector)
 int main()
 {
 	string studentDataFileName = "StudentData.txt";
+	string studentDataEmailFileName = "StudentData_Emails.txt";
 
 	vector<STUDENT_DATA> studentVector; // defining a vector to store the STUDENT_DATA objects
 
-	studentVector = CreateStudentDataObjects(studentDataFileName);
+
+
+	// read the StudentData_Emails.txt if compiled using a PRE_RELEASE compiler directive
+	#ifdef PRE_RELEASE
+		cout << "\n******************************" << endl;
+		cout << "Pre Release Source Code Running" << endl;
+		cout << "*******************************" << endl;
+
+		studentVector = CreateStudentDataObjects(studentDataEmailFileName);
+
+
+	#else
+		cout << "\n****************************" << endl;
+		cout << "Standard Source Code running" << endl;
+		cout << "****************************" << endl;
+
+
+
+		studentVector = CreateStudentDataObjects(studentDataFileName);
+
+
+	#endif
+
 
 	#ifdef _DEBUG
 		cout << "\n**********" << endl;
