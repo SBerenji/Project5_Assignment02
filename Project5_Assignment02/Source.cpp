@@ -41,7 +41,7 @@ vector<STUDENT_DATA> CreateStudentDataObjects(string fileName)
 		while (getline(fin, line))
 		{
 			istringstream lineAsStream(line);   // we are converting the string line to become a stream since 'getline' accepts a stream as its first parameter
-			getline(lineAsStream, studentData.lastName, ',');  // the ',' is the seperator of the first and last name so the line is going to be read until this comma
+			getline(lineAsStream, studentData.lastName, ',');  // the ',' is the separator of the first and last name so the line is going to be read until this comma
 
 			//now the line is in ',' so we read the rest
 			getline(lineAsStream, studentData.firstName, ',');
@@ -63,6 +63,16 @@ vector<STUDENT_DATA> CreateStudentDataObjects(string fileName)
 
 
 
+// This functions prints out the content of the studentVector that contains STUDENT_DATA objects
+void PrintStudentData(vector<STUDENT_DATA> studentVector)
+{
+	for (STUDENT_DATA element : studentVector)
+	{
+		cout << element.lastName << "," << element.firstName << endl;  // since the text file has the last name and then the first name of the students, we print out in the same format
+
+	}
+}
+
 
 int main()
 {
@@ -71,6 +81,15 @@ int main()
 	vector<STUDENT_DATA> studentVector; // defining a vector to store the STUDENT_DATA objects
 
 	studentVector = CreateStudentDataObjects(studentDataFileName);
+
+	#ifdef _DEBUG
+		cout << "\n**********" << endl;
+		cout << "DEBUG Running" << endl;
+		cout << "**********" << endl;
+
+		PrintStudentData(studentVector);
+	#endif
+
 
 	return 1;
 }
